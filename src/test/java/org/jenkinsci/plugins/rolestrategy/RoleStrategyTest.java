@@ -104,9 +104,13 @@ public class RoleStrategyTest {
         assertHasPermission(admin, agent1, Computer.CONFIGURE, Computer.DELETE, Computer.BUILD);
         assertHasPermission(user1, agent1, Computer.BUILD);
         assertHasNoPermission(user1, agent1, Computer.CONFIGURE, Computer.DISCONNECT);
+        assertHasPermission(admin, agent1.getNode(), Computer.CONFIGURE, Computer.DELETE, Computer.BUILD);
+        assertHasPermission(user1, agent1.getNode(), Computer.BUILD);
+        assertHasNoPermission(user1, agent1.getNode(), Computer.CONFIGURE, Computer.DISCONNECT);
 
         // Same user still cannot build on agent2
         assertHasNoPermission(user1, agent2, Computer.BUILD);
+        assertHasNoPermission(user1, agent2.getNode(), Computer.BUILD);
     }
 
     @Test
