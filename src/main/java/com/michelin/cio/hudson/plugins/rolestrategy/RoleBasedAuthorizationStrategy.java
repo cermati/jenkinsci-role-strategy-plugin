@@ -40,6 +40,7 @@ import hudson.model.Hudson;
 import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
+import hudson.model.Node;
 import hudson.model.View;
 import hudson.scm.SCM;
 import hudson.security.ACL;
@@ -61,6 +62,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.regex.Pattern;
@@ -174,6 +176,17 @@ public class RoleBasedAuthorizationStrategy extends AuthorizationStrategy {
     public ACL getACL(@Nonnull Computer computer) {
         return agentRoles.newMatchingRoleMap(computer.getName()).getACL(RoleType.Slave, computer)
                 .newInheritingACL(getRootACL());
+    }
+
+    @Override
+    @Nonnull
+    public ACL getACL(@Nonnull Node node) {
+      Computer nodeComputer = node.toComputer();
+      if (Objects.isNull(nodeComputer)) {
+        throw new IllegalArgumentException(String.format("Cannot convert node '%s' into a Computer instance", node.getNodeName()));
+      }
+
+      return this.getACL(nodeComputer);
     }
 
   /**
